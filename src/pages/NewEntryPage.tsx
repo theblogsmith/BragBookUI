@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { SaveIcon, XIcon, PlusIcon } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { createEntry, addTagsToEntry } from '../services/entryService';
-import { fetchCategories } from '../services/categoryService';
+import { fetchCategories, createCategory } from '../services/categoryService';
 import { fetchTags, createTag } from '../services/tagService';
 
 export default function NewEntryPage() {
@@ -22,6 +22,8 @@ export default function NewEntryPage() {
   const [categoryId, setCategoryId] = useState<string>('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
+  const [showNewCategoryInput, setShowNewCategoryInput] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
 
   useEffect(() => {
     if (user) {
@@ -66,6 +68,24 @@ export default function NewEntryPage() {
 
   const handleRemoveTag = (tagId: string) => {
     setSelectedTags(selectedTags.filter(id => id !== tagId));
+  };
+
+  const handleCreateCategory = async () => {
+    if (!newCategoryName.trim()) return;
+
+    try {
+      const colors = ['#06b6d4', '#10b981', '#f59e0b', '#f472b6', '#8b5cf6', '#ef4444'];
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+      const newCategory = await createCategory(newCategoryName.trim(), user!.id, randomColor);
+      setCategories([...categories, newCategory]);
+      setCategoryId(newCategory.id);
+      setNewCategoryName('');
+      setShowNewCategoryInput(false);
+    } catch (error) {
+      console.error('Error creating category:', error);
+      alert('Failed to create category');
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -160,19 +180,65 @@ export default function NewEntryPage() {
               <label htmlFor="category" className="block text-sm font-bold text-black mb-2">
                 Category
               </label>
-              <select
-                id="category"
-                value={categoryId}
-                onChange={(e) => setCategoryId(e.target.value)}
-                className="block w-full px-4 py-3 border-4 border-black rounded-none bg-cyan-300 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] focus:outline-none focus:ring-2 focus:ring-cyan-400"
-              >
-                <option value="">No Category</option>
-                {categories.map(category => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
+              {!showNewCategoryInput ? (
+                <div className="flex gap-2">
+                  <select
+                    id="category"
+                    value={categoryId}
+                    onChange={(e) => setCategoryId(e.target.value)}
+                    className="flex-1 px-4 py-3 border-4 border-black rounded-none bg-cyan-300 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                  >
+                    <option value="">No Category</option>
+                    {categories.map(category => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => setShowNewCategoryInput(true)}
+                    className="px-4 py-3 bg-green-400 border-4 border-black rounded-none font-bold hover:translate-y-0.5 hover:translate-x-0.5 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)]"
+                    title="Add new category"
+                  >
+                    <PlusIcon className="h-5 w-5" />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newCategoryName}
+                    onChange={(e) => setNewCategoryName(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleCreateCategory())}
+                    placeholder="Enter category name"
+                    className="flex-1 px-4 py-3 border-4 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    onClick={handleCreateCategory}
+                    className="px-4 py-3 bg-green-400 border-4 border-black rounded-none font-bold hover:translate-y-0.5 hover:translate-x-0.5 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)]"
+                  >
+                    <PlusIcon className="h-5 w-5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowNewCategoryInput(false);
+                      setNewCategoryName('');
+                    }}
+                    className="px-4 py-3 bg-red-400 border-4 border-black rounded-none font-bold hover:translate-y-0.5 hover:translate-x-0.5 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)]"
+                  >
+                    <XIcon className="h-5 w-5" />
+                  </button>
+                </div>
+              )}
+              <p className="mt-1 text-xs text-black">
+                {showNewCategoryInput
+                  ? 'Enter a category name and press Enter or click + to create'
+                  : 'Select a category or click + to create a new one'}
+              </p>
             </div>
           </div>
 
