@@ -1,30 +1,60 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { PlusIcon, SearchIcon, FilterIcon } from 'lucide-react';
+import { PlusIcon, SearchIcon } from 'lucide-react';
 import EntryCard from '../components/EntryCard';
-import { mockEntries, categories } from '../utils/mockData';
+import { useAuth } from '../contexts/AuthContext';
+import { fetchEntries, EntryWithDetails } from '../services/entryService';
+import { fetchCategories } from '../services/categoryService';
+
 const Dashboard = () => {
+  const { user } = useAuth();
+  const [entries, setEntries] = useState<EntryWithDetails[]>([]);
+  const [categories, setCategories] = useState<Array<{ id: string; name: string; color: string | null }>>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
-  const [filterSubcategory, setFilterSubcategory] = useState('all');
-  // Get available subcategories based on selected category
-  const availableSubcategories = filterCategory !== 'all' ? categories.find(cat => cat.id === filterCategory)?.subcategories || [] : [];
-  // Filter entries based on search term and category/subcategory filters
-  const filteredEntries = mockEntries.filter(entry => {
-    // Search term filter
-    const matchesSearch = entry.title.toLowerCase().includes(searchTerm.toLowerCase()) || entry.description.toLowerCase().includes(searchTerm.toLowerCase());
-    // Category filter
-    const matchesCategory = filterCategory === 'all' || entry.category === filterCategory;
-    // Subcategory filter (only apply if a category is selected)
-    const matchesSubcategory = filterCategory === 'all' || filterSubcategory === 'all' || entry.subcategory === filterSubcategory;
-    return matchesSearch && matchesCategory && matchesSubcategory;
-  });
-  // Handle category change
-  const handleCategoryChange = e => {
-    const newCategory = e.target.value;
-    setFilterCategory(newCategory);
-    setFilterSubcategory('all'); // Reset subcategory when category changes
+
+  useEffect(() => {
+    if (user) {
+      loadData();
+    }
+  }, [user]);
+
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      const [entriesData, categoriesData] = await Promise.all([
+        fetchEntries(user!.id),
+        fetchCategories(user!.id)
+      ]);
+      setEntries(entriesData);
+      setCategories(categoriesData);
+    } catch (error) {
+      console.error('Error loading dashboard data:', error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const filteredEntries = entries.filter(entry => {
+    const matchesSearch =
+      entry.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      entry.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      filterCategory === 'all' || entry.category_id === filterCategory;
+    return matchesSearch && matchesCategory;
+  });
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto"></div>
+          <p className="mt-4 text-black font-bold">Loading your achievements...</p>
+        </div>
+      </div>
+    );
+  }
   return <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
         <div>
@@ -33,7 +63,7 @@ const Dashboard = () => {
             Track and celebrate your professional achievements
           </p>
         </div>
-        <Link to="/dashboard/new" className="mt-4 sm:mt-0 inline-flex items-center px-4 py-3 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,0.8)] text-sm font-bold rounded-none text-white bg-black hover:translate-y-0.5 hover:translate-x-0.5 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] transition-all">
+        <Link to="/new" className="mt-4 sm:mt-0 inline-flex items-center px-4 py-3 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,0.8)] text-sm font-bold rounded-none text-white bg-black hover:translate-y-0.5 hover:translate-x-0.5 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] transition-all">
           <PlusIcon className="h-4 w-4 mr-2" />
           Log New Achievement
         </Link>
@@ -50,24 +80,13 @@ const Dashboard = () => {
             <label htmlFor="category-filter" className="sr-only">
               Filter by Category
             </label>
-            <select id="category-filter" className="block w-full pl-3 pr-10 py-3 text-black bg-cyan-300 border-4 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)]" value={filterCategory} onChange={handleCategoryChange}>
+            <select id="category-filter" className="block w-full pl-3 pr-10 py-3 text-black bg-cyan-300 border-4 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)]" value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}>
               <option value="all">All Categories</option>
               {categories.map(category => <option key={category.id} value={category.id}>
                   {category.name}
                 </option>)}
             </select>
           </div>
-          {filterCategory !== 'all' && <div>
-              <label htmlFor="subcategory-filter" className="sr-only">
-                Filter by Subcategory
-              </label>
-              <select id="subcategory-filter" className="block w-full pl-3 pr-10 py-3 text-black bg-pink-300 border-4 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)]" value={filterSubcategory} onChange={e => setFilterSubcategory(e.target.value)}>
-                <option value="all">All Subcategories</option>
-                {availableSubcategories.map(subcategory => <option key={subcategory.id} value={subcategory.id}>
-                    {subcategory.name}
-                  </option>)}
-              </select>
-            </div>}
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -75,7 +94,7 @@ const Dashboard = () => {
             <p className="text-black text-center mb-4 font-bold">
               No achievements found. Start by adding your first win!
             </p>
-            <Link to="/dashboard/new" className="inline-flex items-center px-4 py-3 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] text-sm font-bold rounded-none text-white bg-black hover:translate-y-0.5 hover:translate-x-0.5 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] transition-all">
+            <Link to="/new" className="inline-flex items-center px-4 py-3 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] text-sm font-bold rounded-none text-white bg-black hover:translate-y-0.5 hover:translate-x-0.5 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] transition-all">
               <PlusIcon className="h-4 w-4 mr-2" />
               Log New Achievement
             </Link>

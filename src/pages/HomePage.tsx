@@ -17,7 +17,7 @@ const HomePage = () => {
                 most.
               </p>
               <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                <Link to="/dashboard" className="inline-flex items-center justify-center px-8 py-4 text-lg font-bold rounded-none text-white bg-black border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.8)] hover:translate-y-1 hover:translate-x-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.8)] transition-all">
+                <Link to="/signup" className="inline-flex items-center justify-center px-8 py-4 text-lg font-bold rounded-none text-white bg-black border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.8)] hover:translate-y-1 hover:translate-x-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.8)] transition-all">
                   Get Started Free
                 </Link>
                 <a href="#features" className="inline-flex items-center justify-center px-8 py-4 text-lg font-bold rounded-none text-black bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.8)] hover:translate-y-1 hover:translate-x-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.8)] transition-all">
@@ -908,7 +908,7 @@ const HomePage = () => {
                   </span>
                 </li>
               </ul>
-              <Link to="/dashboard" className="block w-full bg-yellow-400 border-4 border-black rounded-none py-3 text-base font-bold text-black text-center hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+              <Link to="/signup" className="block w-full bg-yellow-400 border-4 border-black rounded-none py-3 text-base font-bold text-black text-center hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
                 GET STARTED
               </Link>
             </div>
@@ -957,7 +957,7 @@ const HomePage = () => {
                   </span>
                 </li>
               </ul>
-              <Link to="/dashboard" className="block w-full bg-cyan-400 border-4 border-black rounded-none py-3 text-base font-bold text-black text-center hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+              <Link to="/signup" className="block w-full bg-cyan-400 border-4 border-black rounded-none py-3 text-base font-bold text-black text-center hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
                 START FREE TRIAL
               </Link>
             </div>
@@ -1003,7 +1003,7 @@ const HomePage = () => {
                   </span>
                 </li>
               </ul>
-              <Link to="/dashboard" className="block w-full bg-pink-400 border-4 border-black rounded-none py-3 text-base font-bold text-black text-center hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+              <Link to="/signup" className="block w-full bg-pink-400 border-4 border-black rounded-none py-3 text-base font-bold text-black text-center hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
                 CONTACT SALES
               </Link>
             </div>
@@ -1025,7 +1025,7 @@ const HomePage = () => {
             </div>
             <div className="mt-8 lg:mt-0 lg:flex lg:justify-end">
               <div className="inline-flex">
-                <Link to="/dashboard" className="inline-flex items-center justify-center px-8 py-4 border-4 border-white text-lg font-bold rounded-none text-black bg-yellow-400 hover:translate-y-1 hover:translate-x-1 hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.8)] transition-all shadow-[6px_6px_0px_0px_rgba(255,255,255,0.8)]">
+                <Link to="/signup" className="inline-flex items-center justify-center px-8 py-4 border-4 border-white text-lg font-bold rounded-none text-black bg-yellow-400 hover:translate-y-1 hover:translate-x-1 hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.8)] transition-all shadow-[6px_6px_0px_0px_rgba(255,255,255,0.8)]">
                   GET STARTED FOR FREE
                 </Link>
               </div>
