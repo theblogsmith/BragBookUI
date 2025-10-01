@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeftIcon, CalendarIcon, TagIcon, PaperclipIcon, EyeIcon, EyeOffIcon, UsersIcon, EditIcon, TrashIcon, ThumbsUpIcon } from 'lucide-react';
+import { ArrowLeftIcon, CalendarIcon, TagIcon, PaperclipIcon, EyeIcon, EyeOffIcon, UsersIcon, EditIcon, TrashIcon } from 'lucide-react';
 import { formatDate } from '../utils/formatters';
 import { fetchEntryById, deleteEntry, EntryWithDetails } from '../services/entryService';
 import { useAuth } from '../contexts/AuthContext';
@@ -203,22 +203,16 @@ const ViewEntry = () => {
               </div>
             </div>}
         </div>
-        <div className="px-6 py-4 bg-yellow-300 border-t-4 border-black">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-4">
-              <button className="inline-flex items-center text-black hover:text-gray-700 bg-pink-400 px-3 py-2 rounded-none border-2 border-black font-bold hover:translate-y-0.5 hover:translate-x-0.5 transition-transform">
-                <ThumbsUpIcon className="h-5 w-5 mr-1" />
-                <span className="text-sm">Endorse</span>
-              </button>
-            </div>
-            {entry.privacy_level !== 'private' && <button className="inline-flex items-center px-3 py-2 border-2 border-black text-sm leading-5 font-bold rounded-none text-black bg-cyan-300 hover:bg-cyan-400 hover:translate-y-0.5 hover:translate-x-0.5 transition-all">
-                <svg className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                </svg>
-                Share
-              </button>}
+        {entry.privacy_level !== 'private' && <div className="px-6 py-4 bg-yellow-300 border-t-4 border-black">
+          <div className="flex justify-end items-center">
+            <button className="inline-flex items-center px-3 py-2 border-2 border-black text-sm leading-5 font-bold rounded-none text-black bg-cyan-300 hover:bg-cyan-400 hover:translate-y-0.5 hover:translate-x-0.5 transition-all">
+              <svg className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+              </svg>
+              Share
+            </button>
           </div>
-        </div>
+        </div>}
       </div>
     </div>;
 };
