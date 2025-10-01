@@ -2,14 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SaveIcon, XIcon, PlusIcon } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../contexts/SubscriptionContext';
 import { createEntry, addTagsToEntry } from '../services/entryService';
 import { fetchCategories, createCategory } from '../services/categoryService';
 import { fetchTags, createTag } from '../services/tagService';
+import { UpgradePrompt } from '../components/UpgradePrompt';
 
 export default function NewEntryPage() {
   const { user, profile } = useAuth();
+  const { canCreate, entryCount, entryLimit } = useSubscription();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
   const [categories, setCategories] = useState<Array<{ id: string; name: string }>>([]);
   const [allTags, setAllTags] = useState<Array<{ id: string; name: string }>>([]);
 
@@ -91,6 +95,11 @@ export default function NewEntryPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!canCreate) {
+      setShowUpgradePrompt(true);
+      return;
+    }
+
     if (!title.trim() || !description.trim()) {
       alert('Please fill in all required fields');
       return;
@@ -122,12 +131,27 @@ export default function NewEntryPage() {
 
   return (
     <div className="max-w-4xl mx-auto">
+      <UpgradePrompt isOpen={showUpgradePrompt} onClose={() => setShowUpgradePrompt(false)} />
+
       <div className="mb-6">
         <h1 className="text-2xl font-black text-black">LOG NEW ACHIEVEMENT</h1>
         <p className="mt-1 text-sm font-bold text-black">
           Record your professional wins and accomplishments
         </p>
+        {entryLimit !== -1 && (
+          <div className="mt-2 text-sm font-medium text-black">
+            {entryCount} / {entryLimit} entries used
+          </div>
+        )}
       </div>
+
+      {!canCreate && (
+        <div className="mb-6 bg-yellow-200 border-4 border-black rounded-none p-4">
+          <p className="text-black font-bold">
+            You've reached your limit of {entryLimit} entries. Upgrade to Pro or Team for unlimited entries!
+          </p>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.8)]">
         <div className="space-y-6">

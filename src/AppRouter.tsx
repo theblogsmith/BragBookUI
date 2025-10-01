@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
+import { SubscriptionProvider } from "./contexts/SubscriptionContext";
 import { App } from "./App";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
@@ -12,13 +13,16 @@ import ViewEntry from "./pages/ViewEntry";
 import Settings from "./pages/SettingsPage";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
+import CheckoutSuccess from "./pages/CheckoutSuccess";
+import CheckoutCancel from "./pages/CheckoutCancel";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 export function AppRouter() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Routes>
+        <SubscriptionProvider>
+          <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
@@ -64,8 +68,25 @@ export function AppRouter() {
           />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsOfService />} />
+          <Route
+            path="/checkout/success"
+            element={
+              <ProtectedRoute>
+                <CheckoutSuccess />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/checkout/cancel"
+            element={
+              <ProtectedRoute>
+                <CheckoutCancel />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
+        </SubscriptionProvider>
       </AuthProvider>
     </BrowserRouter>
   );

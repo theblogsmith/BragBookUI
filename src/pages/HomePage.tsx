@@ -1,8 +1,32 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BookOpenIcon, CheckCircleIcon, CalendarIcon, BarChartIcon, ShieldIcon, UserIcon, LockIcon, AwardIcon, TagIcon, FolderIcon, UsersIcon, SearchIcon, ChevronLeftIcon, ChevronRightIcon, XIcon, EyeOffIcon, EyeIcon, ThumbsUpIcon } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { createCheckoutSession } from '../services/subscriptionService';
+
 const HomePage = () => {
   const [isAnnual, setIsAnnual] = useState(false);
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleUpgrade = async (planType: 'pro' | 'team') => {
+    if (!user) {
+      navigate('/signup');
+      return;
+    }
+
+    setLoadingPlan(`${planType}_${isAnnual ? 'annual' : 'monthly'}`);
+
+    try {
+      const url = await createCheckoutSession(planType, isAnnual ? 'annual' : 'monthly');
+      window.location.href = url;
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+      alert('Failed to start checkout. Please try again.');
+      setLoadingPlan(null);
+    }
+  };
   return <div className="bg-white">
       {/* Top Navigation */}
       <nav className="bg-white border-b-4 border-black">
@@ -1012,9 +1036,13 @@ const HomePage = () => {
                   </span>
                 </li>
               </ul>
-              <Link to="/signup" className="block w-full bg-cyan-400 border-4 border-black rounded-none py-3 text-base font-bold text-black text-center hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
-                GET STARTED
-              </Link>
+              <button
+                onClick={() => handleUpgrade('pro')}
+                disabled={loadingPlan === `pro_${isAnnual ? 'annual' : 'monthly'}`}
+                className="block w-full bg-cyan-400 border-4 border-black rounded-none py-3 text-base font-bold text-black text-center hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loadingPlan === `pro_${isAnnual ? 'annual' : 'monthly'}` ? 'LOADING...' : 'GET STARTED'}
+              </button>
             </div>
             <div className="border-4 border-black rounded-none p-8 bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transform rotate-1">
               <h3 className="text-xl font-black text-black mb-2">TEAM</h3>
@@ -1069,9 +1097,13 @@ const HomePage = () => {
                   </span>
                 </li>
               </ul>
-              <Link to="/signup" className="block w-full bg-pink-400 border-4 border-black rounded-none py-3 text-base font-bold text-black text-center hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
-                GET STARTED
-              </Link>
+              <button
+                onClick={() => handleUpgrade('team')}
+                disabled={loadingPlan === `team_${isAnnual ? 'annual' : 'monthly'}`}
+                className="block w-full bg-pink-400 border-4 border-black rounded-none py-3 text-base font-bold text-black text-center hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loadingPlan === `team_${isAnnual ? 'annual' : 'monthly'}` ? 'LOADING...' : 'GET STARTED'}
+              </button>
             </div>
           </div>
         </div>

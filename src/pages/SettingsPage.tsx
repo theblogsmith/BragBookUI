@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { SaveIcon } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import EmailSettingsSection from '../components/EmailSettingsSection';
+import { BillingSection } from '../components/BillingSection';
+import { EntryLimitIndicator } from '../components/EntryLimitIndicator';
 
 export default function SettingsPage() {
   const { profile, updateProfile } = useAuth();
@@ -137,6 +139,14 @@ export default function SettingsPage() {
           </button>
         </div>
       </form>
+
+      <div className="mt-8">
+        <BillingSection />
+      </div>
+
+      <div className="mt-8">
+        <EntryLimitIndicator />
+      </div>
 
       <div className="mt-8">
         <EmailSettingsSection />
