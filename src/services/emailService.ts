@@ -107,6 +107,7 @@ export async function sendTestEmail(userId: string): Promise<void> {
       userId,
       email: profile.email,
       name: profile.full_name,
+      uniqueEmailAddress: settings.unique_email_address,
     }),
   });
 

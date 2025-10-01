@@ -15,16 +15,13 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const { email, name } = await req.json();
+    const { email, name, uniqueEmailAddress } = await req.json();
 
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 
     if (!resendApiKey) {
       throw new Error("RESEND_API_KEY not configured");
     }
-
-    const appUrl = supabaseUrl.replace('.supabase.co', '');
 
     const emailHtml = `
 <!DOCTYPE html>
@@ -43,7 +40,7 @@ Deno.serve(async (req: Request) => {
 
       <div style="background-color: #fff; border: 4px solid #000; padding: 25px;">
         <p style="font-size: 16px; line-height: 1.6; color: #000; font-weight: 600;">
-          Hi ${name || "there"}!
+          Hi ${name || "there"}! 👋
         </p>
 
         <p style="font-size: 16px; line-height: 1.6; color: #000; font-weight: 600;">
@@ -51,17 +48,17 @@ Deno.serve(async (req: Request) => {
         </p>
 
         <div style="background-color: #a7f3d0; border: 3px solid #000; padding: 20px; margin: 20px 0;">
-          <p style="margin: 0; font-size: 16px; font-weight: 700; color: #000;">
-            You'll receive weekly prompts to capture your achievements.
+          <p style="margin: 0 0 10px 0; font-size: 14px; font-weight: 700; color: #000;">
+            YOUR UNIQUE EMAIL ADDRESS:
+          </p>
+          <p style="margin: 0; font-size: 16px; font-family: monospace; color: #000; font-weight: 600;">
+            ${uniqueEmailAddress}
           </p>
         </div>
 
-        <div style="text-align: center; margin-top: 20px;">
-          <a href="${appUrl}/new-entry"
-             style="display: inline-block; padding: 12px 25px; background-color: #000; color: #fff; text-decoration: none; font-weight: 700; border: 3px solid #000; font-size: 14px;">
-            Log an Achievement Now
-          </a>
-        </div>
+        <p style="font-size: 14px; line-height: 1.6; color: #000; font-weight: 600;">
+          Try sending an email to your unique address to log an achievement!
+        </p>
       </div>
     </div>
   </div>
@@ -78,7 +75,7 @@ Deno.serve(async (req: Request) => {
       body: JSON.stringify({
         from: "Brag Ledger <prompts@bragledger.com>",
         to: email,
-        subject: "Test Email from Brag Ledger",
+        subject: "Test Email from Brag Ledger ✅",
         html: emailHtml,
       }),
     });
