@@ -1,11 +1,40 @@
-import React, { useMemo, useState, Component } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon, ClockIcon } from 'lucide-react';
-import { mockEntries, categories } from '../utils/mockData';
 import { formatDate } from '../utils/formatters';
+import { useAuth } from '../contexts/AuthContext';
+import { fetchEntries, EntryWithDetails } from '../services/entryService';
+import { fetchCategories } from '../services/categoryService';
+
 const Timeline = () => {
-  const [viewMode, setViewMode] = useState('month'); // 'month' or 'year'
+  const { user } = useAuth();
+  const [entries, setEntries] = useState<EntryWithDetails[]>([]);
+  const [categories, setCategories] = useState<Array<{ id: string; name: string; color: string | null }>>([]);
+  const [loading, setLoading] = useState(true);
+  const [viewMode, setViewMode] = useState('month');
   const [currentDate, setCurrentDate] = useState(new Date());
+
+  useEffect(() => {
+    if (user) {
+      loadData();
+    }
+  }, [user]);
+
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      const [entriesData, categoriesData] = await Promise.all([
+        fetchEntries(user!.id),
+        fetchCategories(user!.id)
+      ]);
+      setEntries(entriesData);
+      setCategories(categoriesData);
+    } catch (error) {
+      console.error('Error loading timeline data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   // Get current period label (month name or year)
   const currentPeriodLabel = useMemo(() => {
     if (viewMode === 'month') {
@@ -39,28 +68,24 @@ const Timeline = () => {
   };
   // Filter and group entries based on the current view mode and date
   const filteredEntries = useMemo(() => {
-    return mockEntries.filter(entry => {
-      const entryDate = new Date(entry.date);
+    return entries.filter(entry => {
+      const entryDate = new Date(entry.achievement_date);
       if (viewMode === 'month') {
-        // Filter entries for the current month and year
         return entryDate.getMonth() === currentDate.getMonth() && entryDate.getFullYear() === currentDate.getFullYear();
       } else {
-        // Filter entries for the current year
         return entryDate.getFullYear() === currentDate.getFullYear();
       }
-    }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  }, [currentDate, viewMode]);
+    }).sort((a, b) => new Date(b.achievement_date).getTime() - new Date(a.achievement_date).getTime());
+  }, [entries, currentDate, viewMode]);
   // Group entries by date for month view or by month for year view
   const groupedEntries = useMemo(() => {
-    const groups = {};
+    const groups: { [key: number]: EntryWithDetails[] } = {};
     filteredEntries.forEach(entry => {
-      const entryDate = new Date(entry.date);
+      const entryDate = new Date(entry.achievement_date);
       let groupKey;
       if (viewMode === 'month') {
-        // Group by day of month
         groupKey = entryDate.getDate();
       } else {
-        // Group by month
         groupKey = entryDate.getMonth();
       }
       if (!groups[groupKey]) {
@@ -71,32 +96,19 @@ const Timeline = () => {
     return groups;
   }, [filteredEntries, viewMode]);
   // Get category info for an entry
-  const getCategoryInfo = entry => {
-    const category = categories.find(cat => cat.id === entry.category);
-    if (!category) {
+  const getCategoryInfo = (entry: EntryWithDetails) => {
+    if (entry.category) {
+      const colors = ['bg-green-400', 'bg-cyan-400', 'bg-purple-400', 'bg-yellow-400', 'bg-pink-400'];
+      const colorIndex = categories.findIndex(cat => cat.id === entry.category?.id);
+      const color = colorIndex >= 0 ? colors[colorIndex % colors.length] : 'bg-gray-100';
       return {
-        name: 'Unknown',
-        color: 'bg-gray-100 border-black'
+        name: entry.category.name,
+        color: `${color} border-black`
       };
     }
-    let color = 'bg-gray-100 border-black';
-    switch (entry.category) {
-      case 'professional':
-        color = 'bg-green-400 border-black';
-        break;
-      case 'recognition':
-        color = 'bg-cyan-400 border-black';
-        break;
-      case 'learning':
-        color = 'bg-purple-400 border-black';
-        break;
-      case 'milestone':
-        color = 'bg-yellow-400 border-black';
-        break;
-    }
     return {
-      name: category.name,
-      color
+      name: 'Uncategorized',
+      color: 'bg-gray-100 border-black'
     };
   };
   // Render month labels for year view
@@ -149,40 +161,47 @@ const Timeline = () => {
           </button>
         </div>
         {viewMode === 'year' && renderMonthLabels()}
-        {filteredEntries.length > 0 ? <div className="space-y-6">
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto"></div>
+              <p className="mt-4 text-black font-bold">Loading timeline...</p>
+            </div>
+          </div>
+        ) : filteredEntries.length > 0 ? <div className="space-y-6">
             {viewMode === 'month' ?
         // Month view - group by days
-        Object.keys(groupedEntries).sort((a, b) => b - a) // Sort days in descending order
+        Object.keys(groupedEntries).sort((a, b) => Number(b) - Number(a))
         .map(day => <div key={day} className="relative">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-12 w-12 rounded-none bg-cyan-400 flex items-center justify-center text-black font-bold border-4 border-black">
                           {day}
                         </div>
                         <div className="ml-4 text-sm font-bold text-black">
-                          {new Date(currentDate.getFullYear(), currentDate.getMonth(), parseInt(day)).toLocaleDateString('en-US', {
+                          {new Date(currentDate.getFullYear(), currentDate.getMonth(), Number(day)).toLocaleDateString('en-US', {
                 weekday: 'long'
               })}
                         </div>
                       </div>
                       <div className="mt-2 ml-14 space-y-3">
-                        {groupedEntries[day].map(entry => <TimelineEntry key={entry.id} entry={entry} getCategoryInfo={getCategoryInfo} />)}
+                        {groupedEntries[Number(day)].map(entry => <TimelineEntry key={entry.id} entry={entry} getCategoryInfo={getCategoryInfo} />)}
                       </div>
                     </div>) :
         // Year view - group by months
-        Object.keys(groupedEntries).sort((a, b) => b - a) // Sort months in descending order
+        Object.keys(groupedEntries).sort((a, b) => Number(b) - Number(a))
         .map(month => <div key={month} className="relative">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-12 w-12 rounded-none bg-pink-400 flex items-center justify-center text-black font-bold border-4 border-black">
-                          {parseInt(month) + 1}
+                          {Number(month) + 1}
                         </div>
                         <div className="ml-4 text-sm font-bold text-black">
-                          {new Date(currentDate.getFullYear(), parseInt(month)).toLocaleDateString('en-US', {
+                          {new Date(currentDate.getFullYear(), Number(month)).toLocaleDateString('en-US', {
                 month: 'long'
               })}
                         </div>
                       </div>
                       <div className="mt-2 ml-14 space-y-3">
-                        {groupedEntries[month].map(entry => <TimelineEntry key={entry.id} entry={entry} getCategoryInfo={getCategoryInfo} />)}
+                        {groupedEntries[Number(month)].map(entry => <TimelineEntry key={entry.id} entry={entry} getCategoryInfo={getCategoryInfo} />)}
                       </div>
                     </div>)}
           </div> : <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -204,22 +223,25 @@ const Timeline = () => {
 const TimelineEntry = ({
   entry,
   getCategoryInfo
+}: {
+  entry: EntryWithDetails;
+  getCategoryInfo: (entry: EntryWithDetails) => { name: string; color: string };
 }) => {
   const categoryInfo = getCategoryInfo(entry);
   const randomRotation = Math.random() > 0.5 ? 'rotate-1' : '-rotate-1';
-  return <Link to={`/dashboard/entry/${entry.id}`} className={`block p-4 border-4 rounded-none ${categoryInfo.color} hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] transition-all transform ${randomRotation}`}>
+  return <Link to={`/entry/${entry.id}`} className={`block p-4 border-4 rounded-none ${categoryInfo.color} hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] transition-all transform ${randomRotation}`}>
       <div className="flex justify-between items-start">
         <h3 className="text-black font-bold">{entry.title}</h3>
         <div className="text-xs text-black font-bold bg-yellow-300 px-2 py-1 rounded-none border-2 border-black">
-          {formatDate(entry.date)}
+          {formatDate(entry.achievement_date)}
         </div>
       </div>
       <p className="mt-1 text-sm text-black line-clamp-2 font-medium">
         {entry.description}
       </p>
       {entry.tags && entry.tags.length > 0 && <div className="mt-2 flex flex-wrap gap-1">
-          {entry.tags.slice(0, 3).map((tag, index) => <span key={index} className="text-xs bg-white px-2 py-1 rounded-none border-2 border-black font-bold">
-              {tag}
+          {entry.tags.slice(0, 3).map((tag) => <span key={tag.id} className="text-xs bg-white px-2 py-1 rounded-none border-2 border-black font-bold">
+              {tag.name}
             </span>)}
           {entry.tags.length > 3 && <span className="text-xs bg-white px-2 py-1 rounded-none border-2 border-black font-bold">
               +{entry.tags.length - 3}
