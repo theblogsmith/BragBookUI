@@ -83,9 +83,10 @@ Deno.serve(async (req: Request) => {
           ? user.profiles[0]
           : user.profiles;
 
+        const appUrl = supabaseUrl.replace('.supabase.co', '');
         const emailHtml = generateEmailTemplate(
           profile.full_name || "there",
-          user.unique_email_address
+          appUrl
         );
 
         const emailResponse = await fetch("https://api.resend.com/emails", {
@@ -97,8 +98,7 @@ Deno.serve(async (req: Request) => {
           body: JSON.stringify({
             from: "Brag Ledger <prompts@bragledger.com>",
             to: profile.email,
-            reply_to: user.unique_email_address,
-            subject: "What did you accomplish this week? 🎯",
+            subject: "What did you accomplish this week?",
             html: emailHtml,
           }),
         });
@@ -115,7 +115,7 @@ Deno.serve(async (req: Request) => {
           email_type: "prompt_sent",
           from_address: "prompts@bragledger.com",
           to_address: profile.email,
-          subject: "What did you accomplish this week? 🎯",
+          subject: "What did you accomplish this week?",
           body_preview: "Weekly prompt email",
           raw_email_id: emailResult.id,
           processed: true,
@@ -167,7 +167,7 @@ Deno.serve(async (req: Request) => {
   }
 });
 
-function generateEmailTemplate(name: string, uniqueEmailAddress: string): string {
+function generateEmailTemplate(name: string, appUrl: string): string {
   return `
 <!DOCTYPE html>
 <html>
@@ -185,7 +185,7 @@ function generateEmailTemplate(name: string, uniqueEmailAddress: string): string
 
       <div style="background-color: #fff; border: 4px solid #000; padding: 25px; margin: 20px 0;">
         <h2 style="margin: 0 0 15px 0; font-size: 22px; font-weight: 800; color: #000;">
-          Hi ${name}! 👋
+          Hi ${name}!
         </h2>
 
         <p style="margin: 0 0 15px 0; font-size: 16px; line-height: 1.6; color: #000; font-weight: 600;">
@@ -197,41 +197,19 @@ function generateEmailTemplate(name: string, uniqueEmailAddress: string): string
             What did you accomplish this week? Tell us about your wins.
           </p>
         </div>
-
-        <div style="background-color: #fef3c7; border: 3px solid #000; padding: 15px; margin: 20px 0;">
-          <p style="margin: 0 0 10px 0; font-size: 14px; font-weight: 700; color: #000;">
-            💡 PRO TIP:
-          </p>
-          <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #000; font-weight: 600;">
-            Reply to this email with a numbered list, and each item will be saved as a separate achievement!
-          </p>
-          <div style="margin-top: 15px; padding: 10px; background-color: #fff; border: 2px solid #000;">
-            <p style="margin: 0 0 5px 0; font-size: 13px; color: #000;">Example:</p>
-            <p style="margin: 0; font-size: 13px; font-family: monospace; color: #000;">
-              1. Led team meeting and got buy-in on Q4 strategy<br>
-              2. Fixed critical bug that was affecting 20% of users<br>
-              3. Completed training course on cloud architecture
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div style="background-color: #bfdbfe; border: 4px solid #000; padding: 20px; margin: 20px 0;">
-        <p style="margin: 0 0 10px 0; font-size: 14px; font-weight: 700; color: #000;">
-          📧 YOUR UNIQUE EMAIL ADDRESS:
-        </p>
-        <p style="margin: 0 0 15px 0; font-size: 16px; font-family: monospace; color: #000; font-weight: 600;">
-          ${uniqueEmailAddress}
-        </p>
-        <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #000; font-weight: 600;">
-          You can email your achievements to this address anytime - not just in response to this prompt!
-        </p>
       </div>
 
       <div style="text-align: center; margin-top: 30px;">
-        <a href="${Deno.env.get("SUPABASE_URL")?.replace("supabase.co", "")}/dashboard"
+        <a href="${appUrl}/new-entry"
            style="display: inline-block; padding: 15px 30px; background-color: #000; color: #fff; text-decoration: none; font-weight: 800; border: 4px solid #000; box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.8); font-size: 16px;">
-          VIEW YOUR LEDGER
+          ADD YOUR WINS
+        </a>
+      </div>
+
+      <div style="text-align: center; margin-top: 20px;">
+        <a href="${appUrl}/dashboard"
+           style="display: inline-block; padding: 12px 25px; background-color: #fff; color: #000; text-decoration: none; font-weight: 700; border: 3px solid #000; font-size: 14px;">
+          View Your Ledger
         </a>
       </div>
     </div>
@@ -239,7 +217,7 @@ function generateEmailTemplate(name: string, uniqueEmailAddress: string): string
     <div style="text-align: center; margin-top: 20px; padding: 15px;">
       <p style="margin: 0; font-size: 12px; color: #6b7280; font-weight: 600;">
         Don't want these emails?
-        <a href="${Deno.env.get("SUPABASE_URL")?.replace("supabase.co", "")}/settings"
+        <a href="${appUrl}/settings"
            style="color: #000; text-decoration: underline; font-weight: 700;">
           Update your settings
         </a>
