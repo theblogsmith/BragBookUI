@@ -3,6 +3,25 @@ import { Link } from 'react-router-dom';
 import { BookOpenIcon, CheckCircleIcon, CalendarIcon, BarChartIcon, ShieldIcon, UserIcon, LockIcon, AwardIcon, TagIcon, FolderIcon, UsersIcon, SearchIcon, ChevronLeftIcon, ChevronRightIcon, XIcon, EyeOffIcon, EyeIcon, ThumbsUpIcon } from 'lucide-react';
 const HomePage = () => {
   return <div className="bg-white">
+      {/* Top Navigation */}
+      <nav className="bg-white border-b-4 border-black">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            <Link to="/" className="flex items-center">
+              <BookOpenIcon className="h-10 w-10 text-black mr-2" />
+              <span className="text-2xl font-black text-black">BRAG BOOK</span>
+            </Link>
+            <div className="flex items-center space-x-4">
+              <Link to="/login" className="inline-flex items-center justify-center px-6 py-2 text-base font-bold rounded-none text-black bg-white border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] hover:translate-y-1 hover:translate-x-1 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] transition-all">
+                Log In
+              </Link>
+              <Link to="/signup" className="inline-flex items-center justify-center px-6 py-2 text-base font-bold rounded-none text-white bg-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] hover:translate-y-1 hover:translate-x-1 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] transition-all">
+                Sign Up
+              </Link>
+            </div>
+          </div>
+        </div>
+      </nav>
       {/* Hero Section */}
       <div className="bg-yellow-400">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
@@ -1147,9 +1166,20 @@ const HomePage = () => {
             </div>
           </div>
           <div className="mt-12 border-t-4 border-black pt-8">
-            <p className="text-base text-black text-center font-bold">
-              &copy; 2023 BRAG BOOK. ALL RIGHTS RESERVED.
-            </p>
+            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+              <p className="text-base text-black font-bold">
+                &copy; 2025 BRAG BOOK. ALL RIGHTS RESERVED.
+              </p>
+              <div className="flex items-center space-x-4">
+                <Link to="/login" className="text-base text-black hover:text-gray-700 font-medium underline">
+                  Log In
+                </Link>
+                <span className="text-black">|</span>
+                <Link to="/signup" className="text-base text-black hover:text-gray-700 font-medium underline">
+                  Sign Up
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </footer>
