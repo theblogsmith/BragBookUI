@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpenIcon, CheckCircleIcon, CalendarIcon, BarChartIcon, ShieldIcon, UserIcon, LockIcon, AwardIcon, TagIcon, FolderIcon, UsersIcon, SearchIcon, ChevronLeftIcon, ChevronRightIcon, XIcon, EyeOffIcon, EyeIcon, ThumbsUpIcon } from 'lucide-react';
 const HomePage = () => {
+  const [isAnnual, setIsAnnual] = useState(false);
   return <div className="bg-white">
       {/* Top Navigation */}
       <nav className="bg-white border-b-4 border-black">
@@ -895,6 +896,30 @@ const HomePage = () => {
             <p className="mt-4 max-w-2xl text-xl text-black mx-auto font-medium">
               Choose the plan that's right for you or your team
             </p>
+
+            <div className="mt-8 flex items-center justify-center">
+              <span className={`text-lg font-bold mr-4 ${!isAnnual ? 'text-black' : 'text-gray-400'}`}>
+                Monthly
+              </span>
+              <button
+                onClick={() => setIsAnnual(!isAnnual)}
+                className="relative inline-flex h-10 w-20 items-center rounded-none border-4 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-y-0.5 hover:translate-x-0.5 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+              >
+                <span
+                  className={`inline-block h-6 w-6 transform rounded-none border-2 border-black bg-black transition-transform ${
+                    isAnnual ? 'translate-x-11' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+              <span className={`text-lg font-bold ml-4 ${isAnnual ? 'text-black' : 'text-gray-400'}`}>
+                Annual
+              </span>
+              {isAnnual && (
+                <span className="ml-3 inline-block bg-green-400 text-black text-sm font-bold px-3 py-1 rounded-none border-2 border-black">
+                  SAVE UP TO 17%
+                </span>
+              )}
+            </div>
           </div>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             <div className="border-4 border-black rounded-none p-8 bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transform rotate-1">
@@ -941,9 +966,20 @@ const HomePage = () => {
               <p className="text-black mb-4 font-medium">
                 Ideal for employees and freelancers focused on career growth
               </p>
-              <p className="text-5xl font-black mb-6">
-                $5<span className="text-2xl font-bold text-black">/mo</span>
-              </p>
+              {!isAnnual ? (
+                <p className="text-5xl font-black mb-6">
+                  $5<span className="text-2xl font-bold text-black">/mo</span>
+                </p>
+              ) : (
+                <div className="mb-6">
+                  <p className="text-5xl font-black">
+                    $50<span className="text-2xl font-bold text-black">/yr</span>
+                  </p>
+                  <p className="text-sm text-black font-bold mt-2">
+                    <span className="line-through text-gray-500">$60/yr</span> Save 17%
+                  </p>
+                </div>
+              )}
               <ul className="space-y-4 mb-8">
                 <li className="flex items-start">
                   <CheckCircleIcon className="h-6 w-6 text-black flex-shrink-0 mt-0.5 mr-2" />
@@ -986,10 +1022,21 @@ const HomePage = () => {
                 Built for brands and marketing teams to showcase collective
                 impact
               </p>
-              <p className="text-5xl font-black mb-6">
-                $10
-                <span className="text-2xl font-bold text-black">/mo/person</span>
-              </p>
+              {!isAnnual ? (
+                <p className="text-5xl font-black mb-6">
+                  $10
+                  <span className="text-2xl font-bold text-black">/mo/person</span>
+                </p>
+              ) : (
+                <div className="mb-6">
+                  <p className="text-5xl font-black">
+                    $100<span className="text-2xl font-bold text-black">/yr/person</span>
+                  </p>
+                  <p className="text-sm text-black font-bold mt-2">
+                    <span className="line-through text-gray-500">$120/yr</span> Save 17%
+                  </p>
+                </div>
+              )}
               <ul className="space-y-4 mb-8">
                 <li className="flex items-start">
                   <CheckCircleIcon className="h-6 w-6 text-black flex-shrink-0 mt-0.5 mr-2" />
