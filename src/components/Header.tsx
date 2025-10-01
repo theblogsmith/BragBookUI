@@ -21,7 +21,7 @@ const Header = () => {
             <div className="bg-yellow-400 p-2 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)]">
               <BookOpenIcon className="h-7 w-7 text-black" />
             </div>
-            <span className="text-xl font-black text-black">BRAG BOOK</span>
+            <span className="text-xl font-black text-black">BRAG LEDGER</span>
           </Link>
         </div>
         <div className="flex items-center space-x-3">

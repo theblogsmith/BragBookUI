@@ -58,7 +58,7 @@ const Dashboard = () => {
   return <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
         <div>
-          <h1 className="text-2xl font-black text-black">YOUR BRAG BOOK</h1>
+          <h1 className="text-2xl font-black text-black">YOUR BRAG LEDGER</h1>
           <p className="mt-1 text-sm font-bold text-black">
             Track and celebrate your professional achievements
           </p>

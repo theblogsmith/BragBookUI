@@ -9,7 +9,7 @@ const HomePage = () => {
           <div className="flex justify-between items-center h-20">
             <Link to="/" className="flex items-center">
               <BookOpenIcon className="h-10 w-10 text-black mr-2" />
-              <span className="text-2xl font-black text-black">BRAG BOOK</span>
+              <span className="text-2xl font-black text-black">BRAG LEDGER</span>
             </Link>
             <div className="flex items-center space-x-4">
               <Link to="/login" className="inline-flex items-center justify-center px-6 py-2 text-base font-bold rounded-none text-black bg-white border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.8)] hover:translate-y-1 hover:translate-x-1 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] transition-all">
@@ -31,7 +31,7 @@ const HomePage = () => {
                 DOCUMENT YOUR WINS. ADVANCE YOUR CAREER.
               </h1>
               <p className="text-xl md:text-2xl text-black mb-8 font-bold">
-                Brag Book helps you track professional achievements, get
+                Brag Ledger helps you track professional achievements, get
                 recognized, and leverage your accomplishments when it matters
                 most.
               </p>
@@ -46,7 +46,7 @@ const HomePage = () => {
             </div>
             <div className="md:w-1/2 relative -rotate-2 transform">
               <div className="bg-white rounded-none overflow-hidden border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.8)]">
-                <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80" alt="Brag Book Dashboard" className="w-full h-auto" />
+                <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80" alt="Brag Ledger Dashboard" className="w-full h-auto" />
               </div>
               <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-pink-500 -z-10"></div>
             </div>
@@ -89,7 +89,7 @@ const HomePage = () => {
               EVERYTHING YOU NEED TO TRACK AND SHOWCASE YOUR ACCOMPLISHMENTS
             </h2>
             <p className="mt-4 max-w-2xl text-xl text-black mx-auto font-medium">
-              Brag Book makes it easy to document your professional wins,
+              Brag Ledger makes it easy to document your professional wins,
               organize them, and leverage them for performance reviews, job
               applications, and more.
             </p>
@@ -741,7 +741,7 @@ const HomePage = () => {
                 </ul>
               </div>
               <div className="px-8 pb-8">
-                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80" alt="Employee using Brag Book" className="rounded-none border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-full h-48 object-cover" />
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80" alt="Employee using Brag Ledger" className="rounded-none border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-full h-48 object-cover" />
               </div>
             </div>
             {/* Freelancer Persona */}
@@ -779,7 +779,7 @@ const HomePage = () => {
                 </ul>
               </div>
               <div className="px-8 pb-8">
-                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80" alt="Freelancer using Brag Book" className="rounded-none border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-full h-48 object-cover" />
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80" alt="Freelancer using Brag Ledger" className="rounded-none border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-full h-48 object-cover" />
               </div>
             </div>
             {/* Brand Team Persona */}
@@ -817,7 +817,7 @@ const HomePage = () => {
                 </ul>
               </div>
               <div className="px-8 pb-8">
-                <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80" alt="Brand team using Brag Book" className="rounded-none border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-full h-48 object-cover" />
+                <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80" alt="Brand team using Brag Ledger" className="rounded-none border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-full h-48 object-cover" />
               </div>
             </div>
           </div>
@@ -845,7 +845,7 @@ const HomePage = () => {
                 </div>
               </div>
               <p className="text-black italic font-medium">
-                "Brag Book has completely changed how I approach performance
+                "Brag Ledger has completely changed how I approach performance
                 reviews. I used to struggle remembering my accomplishments, but
                 now I have everything documented with context and metrics."
               </p>
@@ -862,7 +862,7 @@ const HomePage = () => {
               </div>
               <p className="text-black italic font-medium">
                 "When I was applying for a promotion, I was able to pull
-                specific examples of my impact from Brag Book. It made building
+                specific examples of my impact from Brag Ledger. It made building
                 my case so much easier and more compelling."
               </p>
             </div>
@@ -877,7 +877,7 @@ const HomePage = () => {
                 </div>
               </div>
               <p className="text-black italic font-medium">
-                "As an HR professional, I recommend Brag Book to everyone on our
+                "As an HR professional, I recommend Brag Ledger to everyone on our
                 team. It's made our review process more objective and
                 data-driven, which benefits both employees and managers."
               </p>
@@ -1039,7 +1039,7 @@ const HomePage = () => {
               </h2>
               <p className="mt-4 text-lg text-white font-medium">
                 Join thousands of professionals who are taking control of their
-                career narrative with Brag Book.
+                career narrative with Brag Ledger.
               </p>
             </div>
             <div className="mt-8 lg:mt-0 lg:flex lg:justify-end">
@@ -1168,7 +1168,7 @@ const HomePage = () => {
           <div className="mt-12 border-t-4 border-black pt-8">
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
               <p className="text-base text-black font-bold">
-                &copy; 2025 BRAG BOOK. ALL RIGHTS RESERVED.
+                &copy; 2025 BRAG LEDGER. ALL RIGHTS RESERVED.
               </p>
               <div className="flex items-center space-x-4">
                 <Link to="/login" className="text-base text-black hover:text-gray-700 font-medium underline">

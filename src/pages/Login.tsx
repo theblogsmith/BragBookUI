@@ -31,7 +31,7 @@ export default function Login() {
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-slate-900 mb-2">Welcome Back</h1>
-            <p className="text-slate-600">Sign in to your Brag Book</p>
+            <p className="text-slate-600">Sign in to your Brag Ledger</p>
           </div>
 
           {error && (
