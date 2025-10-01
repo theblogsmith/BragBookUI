@@ -7,23 +7,22 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
 };
 
-interface MailgunWebhookPayload {
-  sender: string;
-  recipient: string;
-  subject: string;
-  "body-plain": string;
-  "body-html"?: string;
-  "Message-Id"?: string;
-  "stripped-text"?: string;
-  "stripped-signature"?: string;
-}
-
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response(null, {
       status: 200,
       headers: corsHeaders,
     });
+  }
+
+  if (req.method === "GET") {
+    return new Response(
+      JSON.stringify({ message: "Mailgun webhook endpoint is ready" }),
+      {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      }
+    );
   }
 
   try {
