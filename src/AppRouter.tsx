@@ -10,6 +10,8 @@ import Timeline from "./pages/Timeline";
 import NewEntry from "./pages/NewEntryPage";
 import ViewEntry from "./pages/ViewEntry";
 import Settings from "./pages/SettingsPage";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 export function AppRouter() {
@@ -60,6 +62,8 @@ export function AppRouter() {
               </ProtectedRoute>
             }
           />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </AuthProvider>

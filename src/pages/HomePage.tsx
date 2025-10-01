@@ -1148,14 +1148,14 @@ const HomePage = () => {
               </h3>
               <ul className="mt-4 space-y-4">
                 <li>
-                  <a href="#" className="text-base text-black hover:text-gray-700 font-medium">
+                  <Link to="/privacy" className="text-base text-black hover:text-gray-700 font-medium">
                     Privacy
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="text-base text-black hover:text-gray-700 font-medium">
+                  <Link to="/terms" className="text-base text-black hover:text-gray-700 font-medium">
                     Terms
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <a href="#" className="text-base text-black hover:text-gray-700 font-medium">
