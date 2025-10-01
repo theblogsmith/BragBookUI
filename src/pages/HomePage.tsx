@@ -953,7 +953,7 @@ const HomePage = () => {
                 </li>
               </ul>
               <Link to="/signup" className="block w-full bg-yellow-400 border-4 border-black rounded-none py-3 text-base font-bold text-black text-center hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
-                GET STARTED
+                SIGN UP FOR FREE
               </Link>
             </div>
             <div className="border-4 border-black rounded-none p-8 bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative transform -rotate-1">
@@ -1013,7 +1013,7 @@ const HomePage = () => {
                 </li>
               </ul>
               <Link to="/signup" className="block w-full bg-cyan-400 border-4 border-black rounded-none py-3 text-base font-bold text-black text-center hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
-                START FREE TRIAL
+                GET STARTED
               </Link>
             </div>
             <div className="border-4 border-black rounded-none p-8 bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transform rotate-1">
@@ -1070,7 +1070,7 @@ const HomePage = () => {
                 </li>
               </ul>
               <Link to="/signup" className="block w-full bg-pink-400 border-4 border-black rounded-none py-3 text-base font-bold text-black text-center hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
-                CONTACT SALES
+                GET STARTED
               </Link>
             </div>
           </div>
