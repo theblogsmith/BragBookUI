@@ -18,10 +18,11 @@ Deno.serve(async (req: Request) => {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const resendApiKey = Deno.env.get("RESEND_API_KEY");
+    const mailgunApiKey = Deno.env.get("MAILGUN_API_KEY");
+    const mailgunDomain = Deno.env.get("MAILGUN_DOMAIN");
 
-    if (!resendApiKey) {
-      throw new Error("RESEND_API_KEY not configured");
+    if (!mailgunApiKey || !mailgunDomain) {
+      throw new Error("MAILGUN_API_KEY or MAILGUN_DOMAIN not configured");
     }
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
@@ -88,24 +89,24 @@ Deno.serve(async (req: Request) => {
           user.unique_email_address
         );
 
-        const emailResponse = await fetch("https://api.resend.com/emails", {
+        const formData = new FormData();
+        formData.append("from", "Brag Ledger <prompts@bragledger.com>");
+        formData.append("to", profile.email);
+        formData.append("h:Reply-To", user.unique_email_address);
+        formData.append("subject", "What did you accomplish this week? 🎯");
+        formData.append("html", emailHtml);
+
+        const emailResponse = await fetch(`https://api.mailgun.net/v3/${mailgunDomain}/messages`, {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${resendApiKey}`,
-            "Content-Type": "application/json",
+            "Authorization": `Basic ${btoa(`api:${mailgunApiKey}`)}`,
           },
-          body: JSON.stringify({
-            from: "Brag Ledger <prompts@bragledger.com>",
-            to: profile.email,
-            reply_to: user.unique_email_address,
-            subject: "What did you accomplish this week? 🎯",
-            html: emailHtml,
-          }),
+          body: formData,
         });
 
         if (!emailResponse.ok) {
           const error = await emailResponse.text();
-          throw new Error(`Resend API error: ${error}`);
+          throw new Error(`Mailgun API error: ${error}`);
         }
 
         const emailResult = await emailResponse.json();

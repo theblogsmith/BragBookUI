@@ -17,10 +17,11 @@ Deno.serve(async (req: Request) => {
   try {
     const { email, name, uniqueEmailAddress } = await req.json();
 
-    const resendApiKey = Deno.env.get("RESEND_API_KEY");
+    const mailgunApiKey = Deno.env.get("MAILGUN_API_KEY");
+    const mailgunDomain = Deno.env.get("MAILGUN_DOMAIN");
 
-    if (!resendApiKey) {
-      throw new Error("RESEND_API_KEY not configured");
+    if (!mailgunApiKey || !mailgunDomain) {
+      throw new Error("MAILGUN_API_KEY or MAILGUN_DOMAIN not configured");
     }
 
     const emailHtml = `
@@ -66,18 +67,18 @@ Deno.serve(async (req: Request) => {
 </html>
     `;
 
-    const response = await fetch("https://api.resend.com/emails", {
+    const formData = new FormData();
+    formData.append("from", "Brag Ledger <prompts@bragledger.com>");
+    formData.append("to", email);
+    formData.append("subject", "Test Email from Brag Ledger ✅");
+    formData.append("html", emailHtml);
+
+    const response = await fetch(`https://api.mailgun.net/v3/${mailgunDomain}/messages`, {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${resendApiKey}`,
-        "Content-Type": "application/json",
+        "Authorization": `Basic ${btoa(`api:${mailgunApiKey}`)}`,
       },
-      body: JSON.stringify({
-        from: "Brag Ledger <prompts@bragledger.com>",
-        to: email,
-        subject: "Test Email from Brag Ledger ✅",
-        html: emailHtml,
-      }),
+      body: formData,
     });
 
     if (!response.ok) {

@@ -7,19 +7,15 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
 };
 
-interface InboundEmailPayload {
-  from: string;
-  to: string;
+interface MailgunWebhookPayload {
+  sender: string;
+  recipient: string;
   subject: string;
-  text: string;
-  html?: string;
-  attachments?: Array<{
-    filename: string;
-    content: string;
-    contentType: string;
-    size: number;
-  }>;
-  messageId?: string;
+  "body-plain": string;
+  "body-html"?: string;
+  "Message-Id"?: string;
+  "stripped-text"?: string;
+  "stripped-signature"?: string;
 }
 
 Deno.serve(async (req: Request) => {
@@ -35,9 +31,13 @@ Deno.serve(async (req: Request) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const payload: InboundEmailPayload = await req.json();
+    const formData = await req.formData();
 
-    const { to, from, subject, text, attachments, messageId } = payload;
+    const from = formData.get("sender") as string;
+    const to = formData.get("recipient") as string;
+    const subject = formData.get("subject") as string || "";
+    const text = formData.get("stripped-text") as string || formData.get("body-plain") as string || "";
+    const messageId = formData.get("Message-Id") as string;
 
     const toAddress = to.toLowerCase();
     const { data: emailSettings } = await supabase
